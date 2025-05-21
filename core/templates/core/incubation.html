@@ -1,0 +1,127 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="incubation-container">
+    <div class="header-flex">
+        <h2><i class="fas fa-egg"></i> Incubation Records</h2>
+    </div>
+    <p class="description">Taarifa za uatamiaji wa mayai kwa kila kuku pamoja na tarehe za kutotolewa.</p>
+
+    {% if incubations %}
+    <div class="table-wrapper">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Chicken</th>
+                    <th>Start Date</th>
+                    <th>Expected Hatch Date</th>
+                    <th>Hatched?</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inc in incubations %}
+                <tr>
+                    <td>{{ inc.chicken.tag_number }} ({{ inc.chicken.breed }})</td>
+                    <td>{{ inc.start_date }}</td>
+                    <td>{{ inc.expected_hatch_date }}</td>
+                    <td>
+                        {% if inc.is_hatched %}
+                            <span class="badge badge-success">Yes</span>
+                        {% else %}
+                            <span class="badge badge-warning">No</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-message">
+        <p><i class="fas fa-info-circle"></i> Hakuna taarifa za incubation kwa sasa.</p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.incubation-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.incubation-container h2 {
+    font-size: 1.6rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.description {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.styled-table th, .styled-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.styled-table th {
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+.styled-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.styled-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge-success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.empty-message {
+    padding: 1rem;
+    background-color: #fef4e8;
+    border: 1px solid #f0d6b6;
+    border-radius: 6px;
+    color: #a85a00;
+    margin-top: 20px;
+}
+</style>
+{% endblock %}

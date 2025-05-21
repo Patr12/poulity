@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Ongeza Tukio Jipya</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Hifadhi Tukio</button>
+</form>
+<a href="{% url 'calenda' %}">Rudi kwenye kalenda</a>
+{% endblock %}

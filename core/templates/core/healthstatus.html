@@ -1,0 +1,144 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Link to external CSS for health status page -->
+<link rel="stylesheet" href="{% static 'css/healthstatus.css' %}">
+
+<div class="container mx-auto px-4 py-6">
+    <h2 class="text-2xl font-bold text-green-700 mb-4">Health and Vaccination Records</h2>
+    
+    <p class="text-gray-700 mb-6">
+        Keep track of your chickens' health status, illnesses, vaccinations, and routine checkups. 
+        Accurate health records help in early disease detection and improve flock productivity.
+    </p>
+
+    <div class="main-content">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <h1>Welcome to Poultry Dashboard</h1>
+            <p>Manage everything related to your poultry farm here.</p>
+        </div>
+
+        <!-- Health Status Page -->
+        <div id="healthstatus" class="page">
+            <h1 class="text-xl font-semibold">Health Status</h1>
+
+            <!-- Chicken Health Level -->
+            <section id="healthLevel" class="mb-4">
+                <h3 class="text-lg font-semibold">A. Chicken Health Level</h3>
+                <p>Number of healthy chickens: <span id="healthyCount" class="font-bold">0</span></p>
+                <p>Number of sick chickens: <span id="sickCount" class="font-bold">0</span></p>
+                <p>Number of dead chickens: <span id="deadCount" class="font-bold">0</span></p>
+            </section>
+
+            <!-- Disease Symptoms -->
+            <section id="diseaseSymptoms" class="mb-4">
+                <h3 class="text-lg font-semibold">B. Disease Symptoms</h3>
+                <ul class="list-disc ml-5">
+                    <li>Loss of appetite</li>
+                    <li>Weight loss</li>
+                    <li>Decreased egg production</li>
+                    <li>Difficulty breathing</li>
+                    <li>Skin and feather problems</li>
+                    <li>Diarrhea</li>
+                </ul>
+            </section>
+
+            <!-- Disease Types -->
+            <section id="diseaseTypes" class="mb-4">
+                <h3 class="text-lg font-semibold">C. Types of Diseases Affecting Chickens</h3>
+                <form id="diseaseForm" class="mb-4">
+                    <label for="diseaseName" class="block text-sm font-semibold">Disease Name:</label>
+                    <input type="text" id="diseaseName" class="border p-2 rounded w-full" required>
+
+                    <label for="diseaseDescription" class="block text-sm font-semibold mt-2">Description:</label>
+                    <textarea id="diseaseDescription" rows="4" placeholder="Enter a brief description of the disease..." class="border p-2 rounded w-full" required></textarea>
+
+                    <button type="submit" class="bg-green-500 text-white p-2 rounded mt-2">Add Disease</button>
+                </form>
+                
+                <h4 class="font-semibold">Diseases List</h4>
+                <table id="diseaseTable" class="table-auto w-full mt-2">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2">Disease Name</th>
+                            <th class="px-4 py-2">Description</th>
+                            <th class="px-4 py-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Disease records will be added here -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Vaccination Records -->
+            <section id="vaccinationRecords" class="mb-4">
+                <h3 class="text-lg font-semibold">D. Vaccination and Treatment Records</h3>
+                <form id="vaccinationForm" class="mb-4">
+                    <label for="vaccineType" class="block text-sm font-semibold">Type of Vaccination:</label>
+                    <input type="text" id="vaccineType" class="border p-2 rounded w-full" required>
+
+                    <label for="vaccinationDate" class="block text-sm font-semibold mt-2">Vaccination Date:</label>
+                    <input type="date" id="vaccinationDate" class="border p-2 rounded w-full" required>
+
+                    <label for="medication" class="block text-sm font-semibold mt-2">Medication Used:</label>
+                    <input type="text" id="medication" class="border p-2 rounded w-full" required>
+
+                    <button type="submit" class="bg-green-500 text-white p-2 rounded mt-2">Record Vaccination</button>
+                </form>
+
+                <h4 class="font-semibold">Vaccination and Treatment History</h4>
+                <table id="vaccinationTable" class="table-auto w-full mt-2">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2">Vaccine Type</th>
+                            <th class="px-4 py-2">Vaccination Date</th>
+                            <th class="px-4 py-2">Medication</th>
+                            <th class="px-4 py-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Vaccination records will be added here -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Chicken Environment -->
+            <section id="chickenEnvironment" class="mb-4">
+                <h3 class="text-lg font-semibold">E. Chicken Environment</h3>
+                <p>Temperature: <input type="text" id="temperature" class="border p-2 rounded" placeholder="°C"></p>
+                <p>Humidity: <input type="text" id="humidity" class="border p-2 rounded" placeholder="%"></p>
+                <p>Cleanliness: <input type="text" id="cleanliness" class="border p-2 rounded" placeholder="Good/Fair/Poor"></p>
+                <p>Stocking Density: <input type="text" id="stockingDensity" class="border p-2 rounded" placeholder="Chickens per square meter"></p>
+            </section>
+
+            <!-- Nutrition Information -->
+            <section id="nutritionInformation" class="mb-4">
+                <h3 class="text-lg font-semibold">F. Nutrition Information</h3>
+                <p>Type of Feed: <input type="text" id="feedType" class="border p-2 rounded w-full"></p>
+                <p>Feeding Schedule: <input type="text" id="feedingSchedule" class="border p-2 rounded w-full"></p>
+                <p>Food Consumption Status (Kg): <input type="text" id="foodConsumption" class="border p-2 rounded w-full"></p>
+                <p>Water Consumption Status (ml): <input type="number" id="waterConsumed" class="border p-2 rounded" placeholder="Enter amount in milliliters"></p>
+            </section>
+
+            <!-- Health Reports -->
+            <section id="healthReports" class="mb-4">
+                <h3 class="text-lg font-semibold">G. Health Reports and Information</h3>
+                <p>Health Checkup Records: <textarea id="healthCheckupRecords" rows="4" class="border p-2 rounded w-full" placeholder="Enter health checkup records..."></textarea></p>
+                <p>Veterinarian Reports: <textarea id="vetReports" rows="4" class="border p-2 rounded w-full" placeholder="Enter veterinarian reports..."></textarea></p>
+            </section>
+        </div>
+    </div>
+
+    <div class="bg-white p-4 shadow rounded-lg">
+        <p class="text-gray-500 italic">
+            Health records will appear here. Add new entries from the dashboard.
+        </p>
+    </div>
+</div>
+
+<script src="{% static 'js/healthstatus.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+{% endblock %}

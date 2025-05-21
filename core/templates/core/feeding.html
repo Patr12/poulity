@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Taarifa za Ulishaji{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Taarifa za Ulishaji wa Kuku</h2>
+
+    {% if feedings %}
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Tag ya Kuku</th>
+                    <th>Aina ya Chakula</th>
+                    <th>Kiasi (kg/l)</th>
+                    <th>Muda wa Kutoa Chakula</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for feeding in feedings %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ feeding.chicken.tag_number }}</td>
+                    <td>{{ feeding.feed_type }}</td>
+                    <td>{{ feeding.quantity }}</td>
+                    <td>{{ feeding.feeding_time|date:"Y-m-d H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">Hakuna taarifa za ulishaji zilizopatikana.</div>
+    {% endif %}
+</div>
+{% endblock %}

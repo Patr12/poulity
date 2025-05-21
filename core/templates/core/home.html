@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Muhtasari wa Shamba</h2>
+<ul>
+  <li>Jumla ya Kuku: {{ total_chickens }}</li>
+  <li>Mayai Yaliyotagwa: {{ total_eggs }}</li>
+  <li>Uatamaji Unaondelea: {{ ongoing_incubations }}</li>
+  <li>Vifaranga Wote: {{ total_chicks }}</li>
+  <li>Oda za Wateja: {{ total_orders }}</li>
+  <li>Mayai yaliyo pasuka vifaranga na kuku walio kufa {{ total_Motarity }}</li>
+  <li>Wateja Waliosajiliwa: {{ total_customers }}</li>
+</ul>
+
+<h3>Ulishaji wa Karibuni</h3>
+<ul>
+  {% for feed in recent_feedings %}
+    <li>{{ feed.chicken.tag_number }} - {{ feed.feed_type }} ({{ feed.feeding_time }})</li>
+  {% endfor %}
+</ul>
+
+<h3>Ukaguzi wa Afya wa Karibuni</h3>
+<ul>
+  {% for record in recent_health_checks %}
+    <li>{{ record.chicken.tag_number }} - {{ record.status }} ({{ record.checkup_date }})</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

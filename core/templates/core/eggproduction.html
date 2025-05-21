@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Egg Production Records</h2>
+<div class="header-flex">
+    <h2><i class="fas fa-paw"></i> Chicken List</h2>
+    <a href="{% url 'incubation' %}" class="btn-incubation">
+        <i class="fas fa-seedling"></i> View incubation
+    </a>
+</div>
+<table>
+  <tr><th>Chicken</th><th>Date Laid</th><th>Eggs</th></tr>
+  {% for egg in eggs %}
+  <tr>
+    <td>{{ egg.chicken.tag_number }}</td>
+    <td>{{ egg.date_laid }}</td>
+    <td>{{ egg.number_of_eggs }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

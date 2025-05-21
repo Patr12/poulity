@@ -1,0 +1,103 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/healthstatus.css' %}">
+
+<div class="container mx-auto px-4 py-6">
+    <h2 class="text-2xl font-bold text-green-700 mb-4">Health and Vaccination Records</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Chicken Health Status -->
+        <section class="mb-6 bg-white p-4 rounded shadow">
+            <h3 class="text-lg font-semibold">A. Chicken Health Status</h3>
+            {{ health_form.as_p }}
+        </section>
+
+        <!-- Disease Form -->
+        <section class="mb-6 bg-white p-4 rounded shadow">
+            <h3 class="text-lg font-semibold">B. Disease Symptoms</h3>
+            {{ disease_form.as_p }}
+        </section>
+
+        <!-- Vaccination Form -->
+        <section class="mb-6 bg-white p-4 rounded shadow">
+            <h3 class="text-lg font-semibold">C. Vaccination Record</h3>
+            {{ vaccination_form.as_p }}
+        </section>
+
+        <!-- Environment Form -->
+        <section class="mb-6 bg-white p-4 rounded shadow">
+            <h3 class="text-lg font-semibold">D. Chicken Environment</h3>
+            {{ environment_form.as_p }}
+        </section>
+
+        <!-- Nutrition Form -->
+        <section class="mb-6 bg-white p-4 rounded shadow">
+            <h3 class="text-lg font-semibold">E. Nutrition Information</h3>
+            {{ nutrition_form.as_p }}
+        </section>
+
+        <!-- Health Report Form -->
+        <section class="mb-6 bg-white p-4 rounded shadow">
+            <h3 class="text-lg font-semibold">F. Health Reports</h3>
+            {{ report_form.as_p }}
+        </section>
+
+        <!-- Submit Button -->
+        <div class="text-right">
+            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                Save Records
+            </button>
+        </div>
+    </form>
+    <section class="mb-6">
+        <h4 class="font-semibold">Existing Diseases</h4>
+        <table class="table-auto w-full mt-2">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">Name</th>
+                    <th class="px-4 py-2">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for disease in disease_data %}
+                <tr class="border-t">
+                    <td class="px-4 py-2">{{ disease.name }}</td>
+                    <td class="px-4 py-2">{{ disease.description }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="2" class="text-gray-500 italic">No diseases recorded.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <section class="mb-6">
+        <h4 class="font-semibold">Vaccination History</h4>
+        <table class="table-auto w-full mt-2">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">Type</th>
+                    <th class="px-4 py-2">Date</th>
+                    <th class="px-4 py-2">Medication</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for v in vaccination_data %}
+                <tr class="border-t">
+                    <td class="px-4 py-2">{{ v.vaccine_type }}</td>
+                    <td class="px-4 py-2">{{ v.vaccination_date }}</td>
+                    <td class="px-4 py-2">{{ v.medication_used }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="text-gray-500 italic">No vaccinations recorded.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    
+</div>
+
+{% endblock %}

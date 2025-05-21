@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../../.."
+		}
+	],
+	"settings": {
+		"emmet.excludeLanguages": [
+			"markdown",
+			"django.html",
+			"html"
+		]
+	}
+}

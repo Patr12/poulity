@@ -1,0 +1,96 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="customer-container">
+    <h2><i class="fas fa-users"></i> Customer List</h2>
+    <p class="description">Hawa ni wateja waliopo kwenye mfumo wako. Unaweza kufuatilia taarifa zao kwa urahisi.</p>
+
+    {% if customers %}
+    <div class="table-wrapper">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-user"></i> Name</th>
+                    <th><i class="fas fa-envelope"></i> Email</th>
+                    <th><i class="fas fa-phone"></i> Phone</th>
+                    <th><i class="fas fa-map-marker-alt"></i> Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in customers %}
+                <tr>
+                    <td>{{ customer.name }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td>{{ customer.phone }}</td>
+                    <td>{{ customer.address }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-message">
+        <p><i class="fas fa-info-circle"></i> Hakuna wateja waliopo kwa sasa.</p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.customer-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.customer-container h2 {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.customer-container .description {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.styled-table th {
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+.styled-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.styled-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.empty-message {
+    padding: 1rem;
+    background-color: #fef4e8;
+    border: 1px solid #f0d6b6;
+    border-radius: 6px;
+    color: #a85a00;
+    margin-top: 20px;
+}
+</style>
+{% endblock %}

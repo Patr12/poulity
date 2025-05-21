@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poultry Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/eggProduction.css' %}">
+    <link rel="stylesheet" href="{% static 'css/healthStatus.css' %}">
+    
+
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <title >Poultry manage</title>
+            <img src="{% static 'images/kuku.jpg' %}" alt="Poultry Logo"> <!-- Update with your actual logo path -->
+        </div>
+        <nav>
+            <a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a>
+            <a href="{% url 'about' %}"><i class="fas fa-info-circle"></i> About</a>
+            <a href="{% url 'contact' %}"><i class="fas fa-envelope"></i> Contact</a>
+        </nav>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Poultry Dashboard</h2>
+            <ul>
+                <li><a href="{% url 'customer' %}"><i class="fas fa-users"></i> Customer</a></li>
+                <li><a href="{% url 'calenda' %}"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+                <li><a href="{% url 'eggproduction' %}"><i class="fas fa-egg"></i> Egg Production</a></li>
+                
+                <li><a href="{% url 'chicken' %}"><i class="fas fa-paw"></i> Chicken</a></li>
+                <li><a href="{% url 'feeding' %}"><i class="fas fa-bowl-food"></i> Feeding</a></li>
+                <li><a href="{% url 'order' %}"><i class="fas fa-cart-plus"></i> Order</a></li>
+                <li><a href="{% url 'health_dashboard' %}"><i class="fas fa-heartbeat"></i> Health Dashboard</a></li>
+                <li><a href="{% url 'report' %}"><i class="fas fa-chart-line"></i> Reports</a></li>
+                <li><a href="{% url 'settings' %}"><i class="fas fa-cogs"></i> Settings</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            {% block content %}
+            <!-- Default content if none provided -->
+            <p>Welcome to your dashboard!</p>
+            {% endblock %}
+        </div>
+    </div>
+</body>
+</html>

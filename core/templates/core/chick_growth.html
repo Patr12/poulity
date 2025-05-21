@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Chick Growth</h2>
+<table>
+  <tr><th>Incubation ID</th><th>Chicks</th><th>Hatch Date</th></tr>
+  {% for chick in chicks %}
+  <tr>
+    <td>{{ chick.incubation.id }}</td>
+    <td>{{ chick.number_of_chicks }}</td>
+    <td>{{ chick.hatch_date }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

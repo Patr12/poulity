@@ -1,0 +1,20 @@
+table {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+thead th {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+tr:hover {
+    background-color: #f1f5f9;
+}
+
+form input, form button {
+    min-width: 150px;
+}

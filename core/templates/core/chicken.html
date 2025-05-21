@@ -1,0 +1,119 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="chicken-container">
+    <div class="header-flex">
+        <h2><i class="fas fa-paw"></i> Chicken List</h2>
+        <a href="{% url 'chickgrowth' %}" class="btn-growth">
+            <i class="fas fa-seedling"></i> View Chick Growth
+        </a>
+    </div>
+    <p class="description">Orodha ya kuku waliopo kwenye shamba pamoja na taarifa zao.</p>
+
+    {% if chickens %}
+    <div class="table-wrapper">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Tag Number</th>
+                    <th>Breed</th>
+                    <th>Date Acquired</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for chicken in chickens %}
+                <tr>
+                    <td>{{ chicken.tag_number }}</td>
+                    <td>{{ chicken.breed }}</td>
+                    <td>{{ chicken.date_acquired }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-message">
+        <p><i class="fas fa-info-circle"></i> Hakuna kuku waliopo kwa sasa.</p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.chicken-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.chicken-container h2 {
+    font-size: 1.6rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.description {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-growth {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.btn-growth:hover {
+    background-color: #218838;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.styled-table th {
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+.styled-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.styled-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.empty-message {
+    padding: 1rem;
+    background-color: #fef4e8;
+    border: 1px solid #f0d6b6;
+    border-radius: 6px;
+    color: #a85a00;
+    margin-top: 20px;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,175 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poultry Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <img src="path/to/logo.png" alt="Poultry Logo"> <!-- Update the path to your logo image -->
+        </div>
+        <nav>
+            <a href=""><i class="fas fa-home"></i> Home</a>
+            <a href="about.html"><i class="fas fa-info-circle"></i> About</a>
+            <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+            <div class="search-bar">
+                <input type="text" placeholder="Search.">
+                <button type="button"><i class="fas fa-search"></i></button>
+            </div>
+            <a href="#" id="login-link" onclick="showLoginForm();">Login</a>
+            <button id="logout-button" style="display: none;" onclick="handleLogout()">Logout</button>
+        </nav>
+        <div class="login-form" id="login-form">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button onclick="handleLogin(event)">Login</button>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Poultry Dashboard</h2>
+            <ul> 
+                <li><a href=""><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="{% url 'customer' %}" onclick="showPage('customer')"><i class="fas fa-users"></i> Customer</a></li>
+                <li><a href="{% url 'Calendar' %}"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+                <li><a href="{% url 'eggproduction' %}"><i class="fas fa-egg"></i> Egg Production</a></li>
+                <li><a href="{% url 'chicken' %}"><i class="fas fa-paw"></i> Chicken</a></li>
+                <li><a href="{% url 'feeding' %}"><i class="fas fa-bowl-food"></i> Feeding</a></li>
+                <li><a href="{% url 'order' %}"><i class="fas fa-cart-plus"></i> Order</a></li>
+                <li><a href="{% url 'healthStatus' %}"><i class="fas fa-heartbeat"></i> Health Status</a></li>
+                <li><a href="{% url 'report' %}"><i class="fas fa-chart-line"></i> Reports</a></li>
+                <li><a href="{% url 'settings' %}"><i class="fas fa-cogs"></i> Settings</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Home Page -->
+            <div id="home" class="page">
+                <h1>Welcome to the Poultry Dashboard!</h1>
+                <p>Your one-stop solution for managing poultry production efficiently.</p>
+
+                <div class="stats">
+                    <div class="stat">
+                        <h2>Total Chickens</h2>
+                        <p id="totalChickens">150</p>
+                    </div>
+                    <div class="stat">
+                        <h2>Eggs Produced Today</h2>
+                        <p id="eggsProducedToday">120</p>
+                    </div>
+                    <div class="stat">
+                        <h2>Orders Pending</h2>
+                        <p id="ordersPending">5</p>
+                    </div>
+                </div>
+
+                <h2>Latest Updates</h2>
+                <ul id="updates">
+                    <li>New feeding schedule implemented.</li>
+                    <li>Egg production increased by 20% this week.</li <li>Customer feedback received and under review.</li>
+                </ul>
+            </div>
+
+            <!-- Calendar Page -->
+            <div id="calendar" class="page" style="display:none;">
+                <h1>Calendar</h1>
+                <p>View your calendar here.</p>
+            </div>
+
+            <!-- Chicken Management Page -->
+            <div id="chicken" class="page" style="display:none;">
+                <h1>Chicken Management</h1>
+                <p>Manage chickens here.</p>
+            </div>
+
+            <!-- Customer Management Page -->
+            <div id="customer" class="page" style="display:none;">
+                <h1>Customer Management</h1>
+                <p>Manage customers here.</p>
+            </div>
+
+            <!-- Feeding Page -->
+            <div id="feeding" class="page" style="display:none;">
+                <h1>Feeding</h1>
+                <p>Manage feeding schedules here.</p>
+            </div>
+
+            <!-- Egg Production Page -->
+            <div id="eggproduction" class="page" style="display:none;">
+                <h1>Egg Production</h1>
+                <p>Track egg production here.</p>
+            </div>
+
+            <!-- Health Status Page -->
+            <div id="healthstatus" class="page" style="display:none;">
+                <h1>Health Status</h1>
+                <p>Manage health and vaccination records here.</p>
+            </div>
+
+            <!-- Reports Page -->
+            <div id="reports" class="page" style="display:none;">
+                <h1>Reports</h1>
+                <p>View reports here.</p>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settings" class="page" style="display:none;">
+                <h1>Settings</h1>
+                <p>Configure dashboard settings here.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isLoggedIn = false;
+
+        function showLoginForm() {
+            const loginForm = document.getElementById('login-form');
+            loginForm.style.display = loginForm.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Simulate a login process
+            if (username && password) {
+                isLoggedIn = true;
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('login-link').style.display = 'none';
+                document.getElementById('logout-button').style.display = 'inline-block';
+            }
+        }
+
+        function handleLogout() {
+            isLoggedIn = false;
+            document.getElementById('login-link').style.display = 'inline-block';
+            document.getElementById('logout-button').style.display = 'none';
+        }
+
+        // Function to show a selected page and hide others
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.style.display = 'none');
+            document.getElementById(pageId).style.display = 'block';
+        }
+
+        // Initially show the home page
+        showPage('home');
+    </script>
+    <!-- Font Awesome CDN for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</body>
+</html>

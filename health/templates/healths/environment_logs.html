@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Chicken Environment Logs</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Temperature</th>
+      <th>Humidity</th>
+      <th>Recorded At</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for log in logs %}
+    <tr>
+      <td>{{ log.temperature }} °C</td>
+      <td>{{ log.humidity }} %</td>
+      <td>{{ log.recorded_at }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3">No environment logs found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

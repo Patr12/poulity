@@ -1,0 +1,10 @@
+poultry_farm/
+├── core/                 # Main app
+├── customers/            # Customer management
+├── staff/                # Staff management
+├── finance/              # Income/expense tracking
+├── production/           # Egg and hatchery
+├── health/               # Vaccination programs
+├── inventory/            # Feed and supplies
+├── reports/              # Reporting system
+└── documents/            # Document management

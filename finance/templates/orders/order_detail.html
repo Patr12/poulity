@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Order #{{ order.order_number }}</h2>
+<p><strong>Status:</strong> {{ order.status }}</p>
+<p><strong>Payment:</strong> {{ order.payment_status }}</p>
+<p><strong>Total Amount:</strong> {{ order.total_amount }}</p>
+
+<h3>Items</h3>
+<ul>
+    {% for item in order.items.all %}
+    <li>{{ item.quantity }} x {{ item.product }} = {{ item.subtotal }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Payments</h3>
+<ul>
+    {% for payment in order.payments.all %}
+    <li>{{ payment.amount }} (Receipt: {{ payment.receipt_number }})</li>
+    {% empty %}
+    <li>No payments yet.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'make_payment' order.id %}">Make Payment</a>
+{% endblock %}

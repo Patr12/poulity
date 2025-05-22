@@ -1,7 +1,38 @@
 {% extends 'core/base.html' %}
-{% block content %}
-<h2>About Us</h2>
-<p>This project is a comprehensive poultry management system built with Django, designed to help poultry farmers effectively monitor and manage their operations. The system provides an interactive dashboard that tracks egg production, incubation periods, chick growth, feeding schedules, health and vaccination records, and customer orders. It also features a dynamic calendar to organize key activities such as vaccinations, brooding, hatching dates, and order pickups. With a clean and intuitive interface, including a customized admin panel using Jazzmin, the system simplifies farm record-keeping and enhances decision-making for improved productivity and transparency.
 
-</p>
+{% block title %}About Us - Poultry Manager{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-8">
+    <h2 class="text-3xl font-bold mb-6 text-gray-800">About Poultry Manager</h2>
+    
+    <div class="prose prose-lg text-gray-700">
+        <p class="mb-4">
+            Poultry Manager is a comprehensive poultry farm management system built with Django, designed to help poultry farmers 
+            effectively monitor and manage their operations with ease and efficiency.
+        </p>
+        
+        <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Key Features</h3>
+        <ul class="list-disc pl-6 mb-6">
+            <li class="mb-2">Interactive dashboard for real-time farm monitoring</li>
+            <li class="mb-2">Egg production tracking and analytics</li>
+            <li class="mb-2">Incubation period management</li>
+            <li class="mb-2">Chick growth monitoring</li>
+            <li class="mb-2">Automated feeding schedules</li>
+            <li class="mb-2">Health and vaccination records</li>
+            <li class="mb-2">Customer order management system</li>
+            <li class="mb-2">Dynamic activity calendar for farm operations</li>
+        </ul>
+        
+        <p class="mb-4">
+            Our system features a clean, intuitive interface with a customized admin panel using Jazzmin, 
+            simplifying farm record-keeping and enhancing decision-making for improved productivity and transparency.
+        </p>
+        
+        <p>
+            Whether you're running a small backyard operation or a large commercial farm, Poultry Manager provides 
+            the tools you need to streamline your operations and maximize your productivity.
+        </p>
+    </div>
+</div>
 {% endblock %}

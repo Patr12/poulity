@@ -10,6 +10,7 @@
         <table class="styled-table">
             <thead>
                 <tr>
+                    <th><i class="fas fa-user"></i>Full name</th>
                     <th><i class="fas fa-user"></i> Name</th>
                     <th><i class="fas fa-envelope"></i> Email</th>
                     <th><i class="fas fa-phone"></i> Phone</th>
@@ -19,6 +20,7 @@
             <tbody>
                 {% for customer in customers %}
                 <tr>
+                    <td>{{ customer.user }}</td>
                     <td>{{ customer.name }}</td>
                     <td>{{ customer.email }}</td>
                     <td>{{ customer.phone }}</td>

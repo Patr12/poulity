@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - {{ user.username }}{% endblock %}
+
+{% block content %}
+<h2>Profile for {{ user.username }}</h2>
+<p>Email: {{ user.email }}</p>
+
+<h3>Your Data</h3>
+<ul>
+    <li>Health Records: {{ health_records_count }}</li>
+    <li>Egg Productions: {{ egg_productions_count }}</li>
+</ul>
+
+<a href="{% url 'health_dashboard' %}">Go to Health Dashboard</a> |
+<a href="{% url 'eggproduction' %}">Go to Egg Production</a>
+{% endblock %}

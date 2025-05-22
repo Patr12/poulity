@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Water Consumption Records</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Chicken</th>
+      <th>Amount (Liters)</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for usage in usages %}
+    <tr>
+      <td>{{ usage.chicken.name }}</td>
+      <td>{{ usage.amount }}</td>
+      <td>{{ usage.date_recorded }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3">No water consumption records found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Disease Detail: {{ disease.name }}</h1>
+<p>Description: {{ disease.description }}</p>
+<p>Symptoms: {{ disease.symptoms }}</p>
+<p>Prevention: {{ disease.prevention }}</p>
+<a href="{% url 'disease_list' %}">Back to list</a>
+{% endblock %}

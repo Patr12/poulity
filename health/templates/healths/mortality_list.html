@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Mortality Records</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Chicken</th>
+      <th>Date of Death</th>
+      <th>Cause</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for mortality in mortalities %}
+    <tr>
+      <td>{{ mortality.chicken.name }}</td>
+      <td>{{ mortality.date_of_death }}</td>
+      <td>{{ mortality.cause }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3">No mortality records found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

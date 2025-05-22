@@ -1,0 +1,73 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/calendar.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="calendar-container">
+    <div class="calendar-header">
+        <h1><i class="fas fa-calendar-alt"></i> Poultry Farm Calendar</h1>
+        <div class="calendar-actions">
+            <a href="{% url 'incubation' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add Incubation
+            </a>
+            <a href="{% url 'add_egg_production' %}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Add Egg Record
+            </a>
+        </div>
+    </div>
+
+    <div class="calendar-filters">
+        <div class="filter-group">
+            <label><input type="checkbox" class="event-filter" data-type="incubation" checked> Incubation</label>
+            <label><input type="checkbox" class="event-filter" data-type="hatching" checked> Hatching</label>
+            <label><input type="checkbox" class="event-filter" data-type="egg_production" checked> Egg Production</label>
+        </div>
+        <div class="date-navigation">
+            <button id="prev-month" class="btn btn-outline-secondary">
+                <i class="fas fa-chevron-left"></i> Previous
+            </button>
+            <button id="today" class="btn btn-outline-primary">Today</button>
+            <button id="next-month" class="btn btn-outline-secondary">
+                Next <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="calendar"></div>
+
+    <div class="upcoming-events">
+        <h3><i class="fas fa-list"></i> Upcoming Events (Next 7 Days)</h3>
+        <div class="event-list">
+            {% for event in events %}
+                {% if event.start <= today|add:7 and event.start >= today %}
+                <div class="event-item" data-type="{{ event.type }}">
+                    <div class="event-color" style="background-color: {{ event.color }}"></div>
+                    <div class="event-details">
+                        <div class="event-title">{{ event.title }}</div>
+                        <div class="event-date">
+                            <i class="fas fa-calendar-day"></i> 
+                            {{ event.start|date:"M d, Y" }}
+                            {% if event.end and event.end != event.start %}
+                                - {{ event.end|date:"M d, Y" }}
+                            {% endif %}
+                        </div>
+                        <div class="event-description">{{ event.description }}</div>
+                    </div>
+                </div>
+                {% endif %}
+            {% empty %}
+                <div class="no-events">No upcoming events in the next 7 days</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script src="{% static 'js/calendar.js' %}"></script>
+{% endblock %}

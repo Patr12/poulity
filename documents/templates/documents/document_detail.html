@@ -1,0 +1,10 @@
+<h2>{{ document.title }}</h2>
+<p>Type: {{ document.get_document_type_display }}</p>
+<p>Category: {{ document.category }}</p>
+<p>Description: {{ document.description }}</p>
+<p>Uploaded by: {{ document.uploaded_by }}</p>
+<p>Upload date: {{ document.upload_date }}</p>
+<p>Expires: {{ document.expiry_date }}</p>
+<p>
+  <a href="{{ document.file.url }}">Download</a>
+</p>

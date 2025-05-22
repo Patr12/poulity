@@ -6,6 +6,16 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
+    path('customers/', include('customers.urls')),
+    path('staff/', include('staff.urls')),
+    path('finance/', include('finance.urls')),
+    # In your urls.py
+path('production/', include('production.urls')),  # Make sure only one with this namespace
+
+    path('health/', include('health.urls')),
+    path('inventory/', include('inventory.urls')),
+    path('reports/', include('reports.urls')),
+    path('documents/', include('documents.urls')),
 ]
 
 # Serve media files only in development

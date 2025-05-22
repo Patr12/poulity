@@ -1,28 +1,174 @@
 {% extends 'core/base.html' %}
+{% load humanize %}
+
 {% block content %}
-<h2>Muhtasari wa Shamba</h2>
-<ul>
-  <li>Jumla ya Kuku: {{ total_chickens }}</li>
-  <li>Mayai Yaliyotagwa: {{ total_eggs }}</li>
-  <li>Uatamaji Unaondelea: {{ ongoing_incubations }}</li>
-  <li>Vifaranga Wote: {{ total_chicks }}</li>
-  <li>Oda za Wateja: {{ total_orders }}</li>
-  <li>Mayai yaliyo pasuka vifaranga na kuku walio kufa {{ total_Motarity }}</li>
-  <li>Wateja Waliosajiliwa: {{ total_customers }}</li>
-</ul>
+<div class="container-fluid">
+    <!-- Welcome Banner with Animation -->
+    <div class="welcome-banner p-4 mb-4 animate__animated animate__fadeIn">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="animate__animated animate__fadeInLeft">
+                    <i class="fas fa-feather-alt"></i> Karibu {{ user|default:"Mfugaji" }}!
+                </h1>
+                <p class="mb-0 animate__animated animate__fadeInLeft animate__delay-1s">
+                    Mfumo wako wa ufugaji wa kuku - Tathmini ya sasa
+                </p>
+            </div>
+            <div class="col-md-4 text-center">
+                <img src="https://img.icons8.com/color/96/000000/chicken.png" 
+                     class="floating" 
+                     alt="Chicken Icon"
+                     data-aos="zoom-in">
+            </div>
+        </div>
+    </div>
 
-<h3>Ulishaji wa Karibuni</h3>
-<ul>
-  {% for feed in recent_feedings %}
-    <li>{{ feed.chicken.tag_number }} - {{ feed.feed_type }} ({{ feed.feeding_time }})</li>
-  {% endfor %}
-</ul>
+    <h2 class="mb-4 animate__animated animate__fadeIn">Muhtasari wa Shamba</h2>
+    
+    <!-- Summary Cards with Animations -->
+    <div class="row mb-4">
+        {% for card in cards %}
+        <div class="col-xl-2 col-md-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:1|add:0|stringformat:'d'|add:'0' }}">
+            <div class="card border-left-{{ card.color }} shadow h-100 py-2 card-hover-animation">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-{{ card.color }} text-uppercase mb-1">
+                                {{ card.title }}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ card.value|intcomma }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="{{ card.icon }} fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 
-<h3>Ukaguzi wa Afya wa Karibuni</h3>
-<ul>
-  {% for record in recent_health_checks %}
-    <li>{{ record.chicken.tag_number }} - {{ record.status }} ({{ record.checkup_date }})</li>
-  {% endfor %}
-</ul>
+    <!-- Recent Activities Row -->
+    <div class="row">
+        <!-- Recent Feedings -->
+        <div class="col-lg-6 mb-4" data-aos="fade-right">
+            <div class="card shadow card-hover-animation">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-primary text-white">
+                    <h6 class="m-0 font-weight-bold">
+                        <i class="fas fa-utensils"></i> Ulishaji wa Hivi Karibuni
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Tarehe</th>
+                                    <th>Namba ya Kuku</th>
+                                    <th>Aina ya Chakula</th>
+                                    <th>Kiasi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for feed in recent_feedings %}
+                                <tr data-aos="fade-right">
+                                    <td>{{ feed.feeding_time|date:"d/m/Y H:i" }}</td>
+                                    <td>{{ feed.chicken.tag_number }}</td>
+                                    <td>{{ feed.feed_type }}</td>
+                                    <td>{{ feed.amount }} kg</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">Hakuna rekodi za ulishaji</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Health Checks -->
+        <div class="col-lg-6 mb-4" data-aos="fade-left">
+            <div class="card shadow card-hover-animation">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-success text-white">
+                    <h6 class="m-0 font-weight-bold">
+                        <i class="fas fa-heartbeat"></i> Ukaguzi wa Afya wa Hivi Karibuni
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Tarehe</th>
+                                    <th>Namba ya Kuku</th>
+                                    <th>Hali ya Afya</th>
+                                    <th>Matibabu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for record in recent_health_checks %}
+                                <tr data-aos="fade-left">
+                                    <td>{{ record.checkup_date|date:"d/m/Y" }}</td>
+                                    <td>{{ record.chicken.tag_number }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if record.status == 'Healthy' %}success{% else %}danger{% endif %}">
+                                            {{ record.status }}
+                                        </span>
+                                    </td>
+                                    <td>{{ record.treatment|default:"-"|truncatechars:30 }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">Hakuna rekodi za ukaguzi wa afya</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Additional Info Row with Animation -->
+    <div class="row" data-aos="fade-up">
+        <div class="col-lg-12">
+            <div class="card shadow mb-4 card-hover-animation">
+                <div class="card-header py-3 bg-info text-white">
+                    <h6 class="m-0 font-weight-bold">
+                        <i class="fas fa-chart-line"></i> Maelezo ya Ziada
+                    </h6>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <h4 class="text-primary">Jumla ya mayai ya wiki hii: <strong>{{ weekly_eggs|intcomma }}</strong></h4>
+                        <div class="progress mt-3" style="height: 20px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" 
+                                 role="progressbar" 
+                                 style="width: {{ weekly_progress }}%" 
+                                 aria-valuenow="{{ weekly_eggs }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="{{ weekly_target }}">
+                                {{ weekly_eggs }} / {{ weekly_target }}
+                            </div>
+                        </div>
+                    </div>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'add_egg_production' %}" 
+                           class="btn btn-primary btn-lg animate__animated animate__pulse animate__infinite">
+                            <i class="fas fa-plus"></i> Ongeza Rekodi Mpya
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}?next={% url 'add_egg_production' %}" 
+                           class="btn btn-success btn-lg">
+                            <i class="fas fa-sign-in-alt"></i> Ingia kuongeza rekodi
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

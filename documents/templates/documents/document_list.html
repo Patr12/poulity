@@ -1,0 +1,11 @@
+<h2>All Documents</h2>
+<a href="{% url 'upload_document' %}">Upload New Document</a>
+<ul>
+  {% for doc in documents %}
+    <li>
+      <a href="{% url 'document_detail' doc.pk %}">{{ doc.title }}</a>
+      - {{ doc.document_type }}
+      {% if doc.is_expired %}<strong>(Expired)</strong>{% endif %}
+    </li>
+  {% endfor %}
+</ul>

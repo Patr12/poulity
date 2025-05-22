@@ -14,7 +14,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',
+    'django.contrib.humanize',
+    'core',    
+    'customers',
+    'staff',
+    'finance',
+    'production',
+    'health',
+    'inventory',
+    'reports',
+    'documents',
 ]
 
 
@@ -100,6 +109,10 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
 LOGOUT_REDIRECT_URL = 'login'  # ama 'home' kulingana na unavyopenda
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 
 

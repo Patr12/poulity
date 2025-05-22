@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Nutrition Information Logs</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Feed Type</th>
+      <th>Quantity</th>
+      <th>Recorded At</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for log in logs %}
+    <tr>
+      <td>{{ log.feed_type }}</td>
+      <td>{{ log.quantity }}</td>
+      <td>{{ log.recorded_at }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3">No nutrition logs found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

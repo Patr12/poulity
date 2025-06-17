@@ -5,7 +5,7 @@ from django.core.validators import RegexValidator
 
 # Create your models here.
 class Customer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer_profile', null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer', null=True, blank=True)
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=15, validators=[RegexValidator(r'^\+?1?\d{9,15}$')])
@@ -22,7 +22,7 @@ class Customer(models.Model):
         verbose_name_plural = 'Customers'
     
     def __str__(self):
-        return self.name
+        return f"{self.user.username}'s profile"
     
     def save(self, *args, **kwargs):
         if not self.user and self.email:

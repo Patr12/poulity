@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+from django.db import OperationalError, IntegrityError
 from core.forms import (
     ChickenEnvironmentForm, ChickenHealthStatusForm, DiseaseForm, EggProductionForm, HealthReportForm,
     NutritionInformationForm, SettingsForm, VaccinationRecordForm
@@ -43,18 +44,20 @@ def signup_view(request):
 @login_required
 def profile_view(request):
     user = request.user
-    # Kama unataka kuonyesha data kutoka apps zingine, itegemea user
-    # Mfano, onyesha idadi ya records za afya au mayai aliyozalisha
-    health_records_count = HealthStatus.objects.filter(chicken__owner=user).count()
-    egg_productions_count = EggProduction.objects.filter(owner=user).count()
+
+    # Get the Customer instance related to the logged-in user
+    customer = get_object_or_404(Customer, user=user)
+
+    # Query using chicken__owner
+    health_records_count = HealthStatus.objects.filter(chicken__owner=customer).count()
+    egg_productions_count = EggProduction.objects.filter(chicken__owner=customer).count()
 
     context = {
         'user': user,
         'health_records_count': health_records_count,
         'egg_productions_count': egg_productions_count,
     }
-    return render(request, 'profile.html', context)
-# Homepage dashboard
+    return render(request, 'core/profile.html', context)
 def home(request):
     # Calculate weekly egg production
     week_ago = timezone.now() - timedelta(days=7)
@@ -127,7 +130,24 @@ def contact(request):
 # Feeding records
 def feeding(request):
     feedings = Feeding.objects.select_related('chicken').order_by('-feeding_time')
-    return render(request, 'core/feeding.html', {'feedings': feedings})
+    
+    # Calculate statistics
+    total_quantity = feedings.aggregate(Sum('quantity'))['quantity__sum']
+    feed_types = feedings.values_list('feed_type', flat=True).distinct()
+    chickens_count = feedings.values('chicken').distinct().count()
+    
+    # Pagination
+    paginator = Paginator(feedings, 25)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'feedings': page_obj,
+        'total_quantity': total_quantity,
+        'feed_types': feed_types,
+        'chickens_count': chickens_count,
+    }
+    return render(request, 'core/feeding.html', context)
 
 # Orders view
 def order(request):
@@ -161,20 +181,49 @@ def health_dashboard(request):
         'report_form': HealthReportForm(request.POST or None),
     }
 
-    if request.method == 'POST' and all(f.is_valid() for f in forms.values()):
-        for form in forms.values():
-            form.save()
-        return redirect('health_dashboard')
+    if request.method == 'POST':
+        form_name = next((name for name in request.POST if name.endswith('_form')), None)
+        if form_name:
+            form = forms[form_name]
+            if form.is_valid():
+                try:
+                    form.save()
+                    return redirect('core:health_dashboard')
+                except IntegrityError as e:
+                    form.add_error(None, f"Hitilafu ya hifadhidata: {e}")
 
+    # Initialize empty context
     context = {
         **forms,
-        'health_data': HealthStatus.objects.all(),
-        'disease_data': Disease.objects.all(),
-        'vaccination_data': VaccinationRecord.objects.all(),
-        'environment_data': ChickenEnvironment.objects.all(),
-        'nutrition_data': NutritionInformation.objects.all(),
-        'report_data': HealthReport.objects.all(),
+        'health_data': HealthStatus.objects.none(),
+        'disease_data': Disease.objects.none(),
+        'vaccination_data': VaccinationRecord.objects.none(),
+        'environment_data': ChickenEnvironment.objects.none(),
+        'nutrition_data': NutritionInformation.objects.none(),
+        'report_data': HealthReport.objects.none(),
     }
+
+    try:
+        # Try to get actual data
+        context.update({
+            'health_data': HealthStatus.objects.all()[:10],  # Limit to 10 records
+            'disease_data': Disease.objects.all()[:10],
+            'vaccination_data': VaccinationRecord.objects.all()[:10],
+            'environment_data': ChickenEnvironment.objects.all()[:10],
+            'nutrition_data': NutritionInformation.objects.all()[:10],
+            'report_data': HealthReport.objects.all()[:10],
+        })
+    except OperationalError as e:
+        # Handle missing tables gracefully
+        print(f"Database error: {e}")
+        # You might want to log this error properly in production
+
+    if request.method == 'POST':
+        form_name = next((name for name in request.POST if name.endswith('_form')), None)
+        if form_name and forms[form_name].is_valid():
+            forms[form_name].save()
+            return redirect('health_dashboard')
+
     return render(request, 'core/health_dashboard.html', context)
 
 # Reports with date filter
@@ -268,6 +317,7 @@ class AddEggProductionView(CreateView):
     success_url = reverse_lazy('home')  # Rudisha kwenye homepage baada ya kuingiza rekodi
     login_url = '/login' # ukurasa wa kuingia ambao hawana ja sajiliwa kwenye accounts 
 # Egg production view with email notifications
+
 def egg_production_view(request):
     # Get search query if exists
     search_query = request.GET.get('search', '')
@@ -313,6 +363,7 @@ def egg_production_view(request):
     }
     
     return render(request, 'core/eggproduction.html', context)
+
 def edit_egg_production(request, pk):
     egg = get_object_or_404(EggProduction, pk=pk)
     if request.method == 'POST':

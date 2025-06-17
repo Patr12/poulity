@@ -2,12 +2,12 @@ import json
 from django.db import models, transaction
 from django.contrib.auth.models import User
 # Create your models here.
-# reports/views.py
+from django.utils import timezone
 from django.forms import ValidationError
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db.models import Sum, Count
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from core.models import EVENT_TYPES, Chicken, Order
 from production.models import EggProduction
 
@@ -177,6 +177,16 @@ def financial_report(request):
     return render(request, 'reports/financial.html', context)
 # ==== Ripoti ya Afya ====
 class HealthReport(models.Model):
-    health_checkup = models.TextField()
-    vet_report = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    health_checkup = models.TextField(verbose_name="Uchunguzi wa Afya")
+    vet_report = models.TextField(verbose_name="Ripoti ya Daktari wa Wanyama")
+    resolved = models.BooleanField(default=False, verbose_name="Imekamilika")
+    created_at = models.DateTimeField(default=timezone.now, verbose_name="Tarehe ya Kuundwa")
+    
+    class Meta:
+        db_table = 'core_healthreport'  # Explicit table name
+        verbose_name = "Ripoti ya Afya"
+        verbose_name_plural = "Ripoti za Afya"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Ripoti ya Afya ya {self.created_at.strftime('%Y-%m-%d')}"

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Egg Production List{% endblock %}
+{% block content %}
+    <h1>Egg Production Records</h1>
+    <a href="{% url 'production:eggproduction_create' %}" class="btn btn-primary mb-3">Add New Record</a>
+    
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date Laid</th>
+                <th>Quantity</th>
+                <th>Chicken</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for egg in eggs %}
+            <tr>
+                <td>{{ egg.date_laid }}</td>
+                <td>{{ egg.quantity }}</td>
+                <td>{{ egg.chicken.name }}</td>
+                <td>
+                    <a href="{% url 'production:eggproduction_detail' egg.pk %}" class="btn btn-sm btn-info">View</a>
+                    <a href="{% url 'production:eggproduction_update' egg.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="{% url 'production:eggproduction_delete' egg.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No egg production records found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

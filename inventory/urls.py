@@ -1,4 +1,4 @@
-app_name = 'production'  # au jina la app husika
+app_name = 'inventory'  # au jina la app husika
 
 from django.urls import path
 from . import views

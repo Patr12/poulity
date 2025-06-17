@@ -1,4 +1,6 @@
 from django import forms
+
+from core.models import Feeding
 from .models import *
 
 class DiseaseForm(forms.ModelForm):
@@ -40,3 +42,10 @@ class NutritionInformationForm(forms.ModelForm):
     class Meta:
         model = NutritionInformation
         fields = '__all__'
+class FeedingForm(forms.ModelForm):
+    class Meta:
+        model = Feeding
+        fields = ['chicken', 'feed_type', 'quantity', 'feeding_time']
+        widgets = {
+            'feeding_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }

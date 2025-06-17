@@ -1,0 +1,29 @@
+{% extends "reports/base_report.html" %}
+
+{% block report_title %}Health Reports{% endblock %}
+
+{% block report_content %}
+<div class="row">
+    <div class="col-md-12">
+        {% if reports %}
+            <div class="list-group">
+                {% for report in reports %}
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Health Checkup Report</h5>
+                        <small>{{ report.created_at|date:"M d, Y" }}</small>
+                    </div>
+                    <p class="mb-1">{{ report.health_checkup|truncatewords:30 }}</p>
+                    <small>Vet: {{ report.vet_report|truncatewords:15 }}</small>
+                    <a href="#" class="btn btn-sm btn-info float-right">View Details</a>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                No health reports found for the selected period.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

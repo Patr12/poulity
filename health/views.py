@@ -2,13 +2,16 @@ from django.shortcuts import render
 # Create your views here.
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+
+from core.forms import ChickenHealthStatusForm
+from core.models import Chicken, Feeding
 from .models import (
     Disease, Vaccination, VaccinationRecord,
     Mortality, WaterConsumption, HealthStatus,
     ChickenEnvironment, NutritionInformation
 )
 from .forms import (
-    DiseaseForm, VaccinationForm, VaccinationRecordForm,
+    DiseaseForm, FeedingForm, VaccinationForm, VaccinationRecordForm,
     MortalityForm, WaterConsumptionForm, HealthStatusForm,
     ChickenEnvironmentForm, NutritionInformationForm
 )
@@ -28,7 +31,7 @@ def disease_detail(request, pk):
 @login_required
 def vaccination_list(request):
     vaccines = Vaccination.objects.select_related('disease').all()
-    return render(request, 'health/vaccination_list.html', {'vaccines': vaccines})
+    return render(request, 'healths/vaccination_list.html', {'vaccines': vaccines})
 
 # === VACCINATION RECORD VIEWS ===
 @login_required
@@ -65,3 +68,69 @@ def environment_logs(request):
 def nutrition_logs(request):
     logs = NutritionInformation.objects.all().order_by('-recorded_at')
     return render(request, 'health/nutrition_logs.html', {'logs': logs})
+
+
+def add_feeding(request):
+    if request.method == 'POST':
+        form = FeedingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('core:feeding')
+    else:
+        form = FeedingForm()
+    
+    return render(request, 'feeding/feeding_form.html', {'form': form})
+
+def edit_feeding(request, pk):
+    feeding = get_object_or_404(Feeding, pk=pk)
+    if request.method == 'POST':
+        form = FeedingForm(request.POST, instance=feeding)
+        if form.is_valid():
+            form.save()
+            return redirect('core:feeding')
+    else:
+        form = FeedingForm(instance=feeding)
+    
+    return render(request, 'feeding/feeding_form.html', {'form': form})
+
+def delete_feeding(request, pk):
+    feeding = get_object_or_404(Feeding, pk=pk)
+    if request.method == 'POST':
+        feeding.delete()
+        return redirect('core:feeding')
+    return render(request, 'feeding/feeding_confirm_delete.html', {'feeding': feeding})
+
+def chicken_detail(request, pk):
+    chicken = get_object_or_404(Chicken, pk=pk)
+    # Add any additional context you need
+    return render(request, 'feeding/chicken_detail.html', {'chicken': chicken})
+
+
+def add_health_status(request):
+    if request.method == 'POST':
+        form = ChickenHealthStatusForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('core:health_dashboard')
+    else:
+        form = ChickenHealthStatusForm()
+    return render(request, 'healths/health_status_form.html', {'form': form})
+
+def edit_health_status(request, pk):
+    health_status = get_object_or_404(HealthStatus, pk=pk)
+    if request.method == 'POST':
+        form = ChickenHealthStatusForm(request.POST, instance=health_status)
+        if form.is_valid():
+            form.save()
+            return redirect('core:health_dashboard')
+    else:
+        form = ChickenHealthStatusForm(instance=health_status)
+    return render(request, 'chealths/health_status_form.html', {'form': form})
+
+def delete_health_status(request, pk):
+    health_status = get_object_or_404(HealthStatus, pk=pk)
+    if request.method == 'POST':
+        health_status.delete()
+        return redirect('core:health_dashboard')
+    return render(request, 'healths/health_status_confirm_delete.html', {'health_status': health_status})
+

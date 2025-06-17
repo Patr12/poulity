@@ -45,7 +45,7 @@ import os
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # ongeza paths hapa kama una custom templates
+        'DIRS': ['templates'],  # ongeza paths hapa kama una custom templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -1,0 +1,75 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Maelezo ya Kuku - {{ chicken.tag_number }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">
+                            <i class="fas fa-info-circle"></i> Maelezo ya Kuku
+                        </h3>
+                        <span class="badge bg-light text-dark fs-6">
+                            #{{ chicken.tag_number }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="info-box p-3 border rounded">
+                                <h5><i class="fas fa-utensils text-success"></i> Ulishaji wa Hivi Karibuni</h5>
+                                <hr>
+                                {% if chicken.feedings.all %}
+                                    <ul class="list-group list-group-flush">
+                                        {% for feeding in chicken.feedings.all|slice:":3" %}
+                                        <li class="list-group-item">
+                                            <strong>{{ feeding.feed_type }}</strong> - 
+                                            {{ feeding.quantity }}kg/l<br>
+                                            <small class="text-muted">{{ feeding.feeding_time|timesince }} ago</small>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p class="text-muted">Hakuna rekodi za ulishaji</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box p-3 border rounded">
+                                <h5><i class="fas fa-chart-line text-info"></i> Takwimu</h5>
+                                <hr>
+                                <p><strong>Jumla ya Ulishaji:</strong> {{ chicken.feedings.count }}</p>
+                                <p><strong>Jumla ya Chakula:</strong> {{ total_food|default:"0" }} kg/l</p>
+                                <p><strong>Aina za Chakula:</strong> {{ feed_types|join:", " }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <a href="{% url 'core:feeding' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left"></i> Rudi kwenye Orodha
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .info-box {
+        height: 100%;
+    }
+    .list-group-item {
+        border-left: none;
+        border-right: none;
+    }
+    .card {
+        border-radius: 10px;
+    }
+</style>
+{% endblock %}

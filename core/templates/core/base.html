@@ -4,141 +4,587 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Poultry Dashboard{% endblock %}</title>
-       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-        <!-- Add these in your head section -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>{% block title %}PoultryPro Dashboard{% endblock %}</title>
+    
+    <!-- CSS Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
     <style>
-          :root {
-            --primary-color: #4e73df;
-            --secondary-color: #1cc88a;
-            --light-color: #f8f9fc;
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4bbf73;
+            --warning-color: #f0ad4e;
+            --danger-color: #d9534f;
         }
         
-        .welcome-banner {
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            overflow-x: hidden;
+        }
+        
+        /* Header Styles */
+        .main-header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border-radius: 10px;
-            color: white;
-            overflow: hidden;
-            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
+            height: 70px;
         }
         
-        .welcome-banner::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            animation: pulse 15s infinite linear;
+        .logo-container {
+            width: 220px;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
         }
         
-        @keyframes pulse {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .card-hover-animation {
+        .logo-img {
+            height: 40px;
             transition: all 0.3s ease;
         }
         
-        .card-hover-animation:hover {
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 220px;
+            background: white;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            bottom: 0;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.05);
+            z-index: 1020;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar-menu {
+            padding: 15px 0;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--dark-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 5px 0;
+            border-left: 3px solid transparent;
+        }
+        
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .menu-item i {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 220px;
+            margin-top: 70px;
+            padding: 25px;
+            min-height: calc(100vh - 70px);
+            transition: all 0.3s ease;
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-card {
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+        }
+        
+        .dashboard-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
         
-        .floating { 
-            animation: floating 3s ease-in-out infinite;
+        .card-icon {
+            font-size: 2rem;
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
         }
         
-        @keyframes floating {
+        /* Footer Styles */
+        .main-footer {
+            background: linear-gradient(135deg, var(--dark-color), #2b2b2b);
+            color: white;
+            padding: 30px 0 20px;
+            margin-left: 220px;
+        }
+        
+        .footer-logo {
+            height: 40px;
+            margin-bottom: 15px;
+        }
+        
+        .footer-links h5 {
+            position: relative;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links h5::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        /* Animations */
+        @keyframes float {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
             100% { transform: translateY(0px); }
         }
-        .card:hover {
-            transform: translateY(-5px);
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content, .main-footer {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block !important;
+            }
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+        
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            visibility: hidden;
             transition: all 0.3s ease;
+            z-index: 999;
+        }
+        
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background: var(--secondary-color);
+            transform: translateY(-5px);
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/index.css' %}">
-    <link rel="stylesheet" href="{% static 'css/eggProduction.css' %}">
-    <link rel="stylesheet" href="{% static 'css/healthStatus.css' %}">
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <div class="logo">
-            <img src="{% static 'images/kuku.jpg' %}" alt="Poultry Logo">
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="d-flex align-items-stretch">
+            <!-- Logo -->
+            <div class="logo-container">
+                <a href="{% url 'core:home' %}">
+                    <img src="{% static 'images/kuku.jpg' %}" alt="PoultryPro Logo" class="logo-img">
+                </a>
+            </div>
+            
+            <!-- Menu Toggle (Mobile) -->
+            <button class="navbar-toggler d-lg-none menu-toggle text-white border-0 bg-transparent" style="display: none;">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <!-- Navigation Menu -->
+            <div class="d-flex align-items-center justify-content-between flex-grow-1 px-4">
+                <nav class="nav-menu">
+                    <a href="{% url 'core:home' %}" class="nav-link active">
+                        <i class="fas fa-home"></i>
+                        <span class="d-none d-lg-inline">Home</span>
+                    </a>
+                     {% if user.is_authenticated %}
+                    <a href="{% url 'core:profile' %}" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span class="d-none d-lg-inline">Dashboard</span>
+                    </a>
+                     <a href="{% url 'core:order' %}" class="nav-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="d-none d-lg-inline">Orders</span>
+                    </a>
+                     <a href="{% url 'core:logout' %}" class="nav-link">
+                        <i class="fas fa-sign-out-alt me-2"></i>
+                        <span class="d-none d-lg-inline">Logout</span>
+                    </a>
+                    {% else %}
+                     <a href="{% url 'core:login' %}" class="nav-link">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        <span class="d-none d-lg-inline">Login</span>
+                    </a>
+                     <a href="{% url 'core:signup' %}" class="nav-link">
+                        <i class="fas fa-user-plus me-"></i>
+                        <span class="d-none d-lg-inline">Sign Up</span>
+                    </a>
+                     {% endif %}                  
+                </nav>
+                   {% if user.is_authenticated %}
+                <!-- User Dropdown -->
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" 
+                       id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{% static 'images/user-avatar.jpg' %}" width="32" height="32" class="rounded-circle me-2">
+                        <span class="d-none d-lg-inline">{{ user.username|default:"Guest" }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="{% url 'core:profile' %}"><i class="fas fa-user-circle me-2"></i> Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'core:settings' %}"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        {% if user.is_authenticated %}
+                            <li><a class="dropdown-item" href="{% url 'core:logout' %}"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        {% else %}
+                            <li><a class="dropdown-item" href="{% url 'core:login' %}"><i class="fas fa-sign-in-alt me-2"></i> Login</a></li>
+                            <li><a class="dropdown-item" href="{% url 'core:signup' %}"><i class="fas fa-user-plus me-2"></i> Sign Up</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                  {% endif %}
+            </div>
         </div>
-        <nav>
-            <a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a>
-            <a href="{% url 'about' %}"><i class="fas fa-info-circle"></i> About</a>
-            <a href="{% url 'contact' %}"><i class="fas fa-envelope"></i> Contact</a>
-            {% if user.is_authenticated %}
-                <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
-            {% else %}
-                <a href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
-                <a href="{% url 'signup' %}"><i class="fas fa-user-plus"></i> Sign Up</a>
-            {% endif %}
-        </nav>
-    </div>
+    </header>
+ {% if user.is_authenticated %}
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h5 class="mb-0 text-center">PoultryPro Menu</h5>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="{% url 'core:home' %}" class="menu-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            
+            <div class="menu-group">
+                <div class="menu-group-title">Production</div>
+                <a href="{% url 'core:chicken' %}" class="menu-item">
+                    <i class="fas fa-paw"></i>
+                    <span>Chickens</span>
+                </a>
+                <a href="{% url 'production:eggproduction_list' %}" class="menu-item">
+                    <i class="fas fa-egg"></i>
+                    <span>Egg Production</span>
+                </a>
+                <a href="{% url 'core:feeding' %}" class="menu-item">
+                    <i class="fas fa-bowl-food"></i>
+                    <span>Feeding</span>
+                </a>
+            </div>
+            
+            <div class="menu-group">
+                <div class="menu-group-title">Health</div>
+                <a href="{% url 'core:health_dashboard' %}" class="menu-item">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Health Dashboard</span>
+                </a>
+                <a href="{% url 'core:chickgrowth' %}" class="menu-item">
+                    <i class="fas fa-syringe"></i>
+                    <span>Vaccination</span>
+                </a>
+            </div>
+            
+            <div class="menu-group">
+                <div class="menu-group-title">Business</div>
+                <a href="{% url 'core:customer' %}" class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Customers</span>
+                </a>
+                <a href="{% url 'core:order' %}" class="menu-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Orders</span>
+                </a>
+                <a href="{% url 'core:report' %}" class="menu-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Financial Reports</span>
+                </a>
+            </div>
+            
+            <div class="menu-group">
+                <div class="menu-group-title">Settings</div>
+                <a href="{% url 'core:settings' %}" class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>System Settings</span>
+                </a>
+                <a href="{% url 'core:profile' %}" class="menu-item">
+                    <i class="fas fa-user-shield"></i>
+                    <span>User Management</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+  {% endif %}
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}
+        <!-- Default content can go here -->
+        <div class="container-fluid">
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                    <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
+                </a>
+            </div>
+            
+            <!-- Content Row -->
+            <div class="row">
+                <!-- Add your dashboard content here -->
+            </div>
+        </div>
+        {% endblock %}
+    </main>
 
-    <div class="dashboard-container">
-        {% if user.is_authenticated %}
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <h2>Poultry Dashboard</h2>
-            <div class="user-menu dropdown">
-    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fas fa-user-circle"></i> {{ user.username }}
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <img src="{% static 'images/kuku.jpg' %}" alt="PoultryPro Logo" class="footer-logo">
+                    <p class="mb-4">PoultryPro is a comprehensive poultry farm management system designed to help farmers optimize their operations and maximize productivity.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <div class="footer-links">
+                        <h5>Quick Links</h5>
+                        <a href="{% url 'core:home' %}">Home</a>
+                        <a href="{% url 'core:about' %}">About Us</a>
+                        <a href="{% url 'core:order' %}">Services</a>
+                        <a href="{% url 'core:contact' %}">Contact</a>
+                        <a href="{% url 'core:customer' %}">Blog</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <div class="footer-links">
+                        <h5>Our Products</h5>
+                        <a href="#">Day-Old Chicks</a>
+                        <a href="{% url 'production:eggproduction_list' %}">Fresh Eggs</a>
+                        <a href="{% url 'production:eggproduction_list' %}">Poultry Feed</a>
+                        <a href="{% url 'production:incubation_list' %}">Equipment</a>
+                        <a href="{% url 'health:vaccination_list' %}">Vaccines</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-links">
+                        <h5>Contact Info</h5>
+                        <p><i class="fas fa-map-marker-alt me-2"></i> 123 Poultry Farm Rd, Iringa Tanzania>
+                        <p><i class="fas fa-clock me-2"></i> Mon-Fri: 8:00 AM - 5:00 PM</p>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="mt-4 mb-3" style="border-color: rgba(255,255,255,0.1);">
+            
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <p class="mb-0">&copy; 2025 PoultryPro. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="payment-methods">
+                        <span class="me-2">We accept:</span>
+                        <i class="fab fa-cc-mastercard me-2"></i>
+                        <i class="fab fa-cc-visa me-2"></i>
+                        <i class="fab fa-cc-paypal me-2"></i>
+                        <i class="fas fa-mobile-alt me-2"></i>
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
     </a>
-       <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-    
-</div>
-            <ul>
-                <li><a href="{% url 'customer' %}"><i class="fas fa-users"></i> Customer</a></li>
-                <li><a href="{% url 'calenda' %}"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
-                <li><a href="{% url 'eggproduction' %}"><i class="fas fa-egg"></i> Egg Production</a></li>
-                <li><a href="{% url 'chicken' %}"><i class="fas fa-paw"></i> Chicken</a></li>
-                <li><a href="{% url 'feeding' %}"><i class="fas fa-bowl-food"></i> Feeding</a></li>
-                <li><a href="{% url 'order' %}"><i class="fas fa-cart-plus"></i> Order</a></li>
-                <li><a href="{% url 'health_dashboard' %}"><i class="fas fa-heartbeat"></i> Health Dashboard</a></li>
-                <li><a href="{% url 'report' %}"><i class="fas fa-chart-line"></i> Reports</a></li>
-                <li><a href="{% url 'settings' %}"><i class="fas fa-cogs"></i> Settings</a></li>
-                 <ul class="dropdown-menu">
-     
-        <li><a class="dropdown-item" href="{% url 'finance:order_list' %}">Health Dashboard</a></li>
-        <li><a class="dropdown-item" href="">Egg Production</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-    </ul>
-            </ul>
-        </div>
-        {% endif %}
 
-        <!-- Main Content -->
-        <div class="main-content">
-            {% block content %}
-            <p>Welcome to your dashboard!</p>
-            {% endblock %}
-        </div>
-    </div>
-      <!-- Add these before closing body tag -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    
+    <!-- Custom JavaScript -->
     <script>
+        
+        // Initialize AOS animations
         AOS.init({
             duration: 800,
             easing: 'ease-in-out',
             once: true
         });
+        
+        // Back to top button
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 300) {
+                $('.back-to-top').addClass('active');
+            } else {
+                $('.back-to-top').removeClass('active');
+            }
+        });
+        
+        $('.back-to-top').click(function(e) {
+            e.preventDefault();
+            $('html, body').animate({scrollTop: 0}, '300');
+        });
+        
+        // Mobile menu toggle
+        $('.menu-toggle').click(function() {
+            $('.sidebar').toggleClass('active');
+        });
+        
+        // Initialize Select2
+        $('.select2').select2();
+        
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
     </script>
+    
+    {% block scripts %}{% endblock %}
 </body>
 </html>

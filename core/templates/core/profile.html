@@ -3,15 +3,78 @@
 {% block title %}Profile - {{ user.username }}{% endblock %}
 
 {% block content %}
-<h2>Profile for {{ user.username }}</h2>
-<p>Email: {{ user.email }}</p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Profile for {{ user.username }}</h2>
+                </div>
+                
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="profile-info p-3 border rounded">
+                                <h4 class="text-primary"><i class="fas fa-user-circle"></i> Basic Information</h4>
+                                <hr>
+                                <p><strong><i class="fas fa-envelope"></i> Email:</strong> {{ user.email }}</p>
+                                <p><strong><i class="fas fa-calendar-alt"></i> Member since:</strong> {{ user.date_joined|date:"F d, Y" }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="stats-info p-3 border rounded">
+                                <h4 class="text-success"><i class="fas fa-chart-bar"></i> Your Statistics</h4>
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <div class="stat-item text-center">
+                                        <div class="stat-value text-primary">{{ health_records_count }}</div>
+                                        <div class="stat-label">Health Records</div>
+                                    </div>
+                                    <div class="stat-item text-center">
+                                        <div class="stat-value text-success">{{ egg_productions_count }}</div>
+                                        <div class="stat-label">Egg Productions</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-actions text-center">
+                        <h4 class="mb-3"><i class="fas fa-rocket"></i> Quick Actions</h4>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{% url 'core:health_dashboard' %}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-heartbeat"></i> Health Dashboard
+                            </a>
+                            <a href="{% url 'core:eggproduction' %}" class="btn btn-success btn-lg">
+                                <i class="fas fa-egg"></i> Egg Production
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-footer text-muted text-center">
+                    Last login: {{ user.last_login|timesince }} ago
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<h3>Your Data</h3>
-<ul>
-    <li>Health Records: {{ health_records_count }}</li>
-    <li>Egg Productions: {{ egg_productions_count }}</li>
-</ul>
-
-<a href="{% url 'health_dashboard' %}">Go to Health Dashboard</a> |
-<a href="{% url 'eggproduction' %}">Go to Egg Production</a>
+<style>
+    .profile-info, .stats-info {
+        height: 100%;
+    }
+    .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+    }
+    .stat-label {
+        font-size: 14px;
+        color: #6c757d;
+    }
+    .quick-actions .btn {
+        min-width: 200px;
+    }
+</style>
 {% endblock %}

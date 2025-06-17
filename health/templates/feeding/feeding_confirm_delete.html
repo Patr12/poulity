@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Thibitisha Kufuta Ulishaji{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> Thibitisha Kufuta
+                    </h3>
+                </div>
+                <div class="card-body text-center">
+                    <div class="alert alert-warning">
+                        <h5><i class="fas fa-trash-alt"></i> Unakaribia kufuta rekodi ya ulishaji!</h5>
+                        <hr>
+                        <p class="mb-1"><strong>Kuku:</strong> {{ feeding.chicken.tag_number }}</p>
+                        <p class="mb-1"><strong>Aina ya Chakula:</strong> {{ feeding.feed_type }}</p>
+                        <p class="mb-1"><strong>Kiasi:</strong> {{ feeding.quantity }} kg/l</p>
+                        <p class="mb-1"><strong>Tarehe:</strong> {{ feeding.feeding_time|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    
+                    <p class="lead text-danger">Je, una uhakika unataka kufuta rekodi hii?</p>
+                    <p class="text-muted">Hatua hii haiwezi kutenduliwa!</p>
+                    
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{% url 'core:feeding' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Ghairi
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Ndio, Futa
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

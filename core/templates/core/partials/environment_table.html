@@ -1,0 +1,49 @@
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th>#</th>
+                <th>Joto (°C)</th>
+                <th>Unyevu (%)</th>
+                <th>Usafi</th>
+                <th>Tarehe</th>
+                <th>Vitendo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for env in data %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ env.temperature }}</td>
+                <td>{{ env.humidity }}</td>
+                <td>
+                    <span class="badge 
+                        {% if env.cleanliness == 'excellent' %}bg-success
+                        {% elif env.cleanliness == 'good' %}bg-primary
+                        {% elif env.cleanliness == 'fair' %}bg-warning
+                        {% else %}bg-danger{% endif %}">
+                        {{ env.get_cleanliness_display }}
+                    </span>
+                </td>
+                <td>{{ env.record_date|date:"d/m/Y" }}</td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <a href="{% url 'core:edit_environment' env.id %}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'core:delete_environment' env.id %}" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-muted">
+                    <i class="fas fa-info-circle"></i> Hakuna rekodi za mazingira zilizopatikana
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

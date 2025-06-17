@@ -1,0 +1,68 @@
+<!-- reports/templates/reports/report_list.html -->
+{% extends 'core/base.html' %}
+
+{% block title %}Orodha ya Ripoti{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-file-alt"></i> Orodha ya Ripoti</h2>
+        <a href="{% url 'reports:add_report' %}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Ongeza Ripoti
+        </a>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Tarehe</th>
+                            <th>Uchunguzi</th>
+                            <th>Imekamilika</th>
+                            <th>Vitendo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for report in reports %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ report.created_at|date:"d/m/Y" }}</td>
+                            <td>{{ report.health_checkup|truncatechars:50 }}</td>
+                            <td>
+                                {% if report.resolved %}
+                                    <i class="fas fa-check-circle text-success"></i>
+                                {% else %}
+                                    <i class="fas fa-times-circle text-danger"></i>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'reports:view_report' report.id %}" class="btn btn-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'reports:edit_report' report.id %}" class="btn btn-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'reports:delete_report' report.id %}" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">
+                                <i class="fas fa-info-circle"></i> Hakuna ripoti zilizopatikana
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

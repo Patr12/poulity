@@ -1,0 +1,42 @@
+<!-- core/templates/core/partials/health_table.html -->
+<table class="table table-bordered" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Kuku</th>
+            <th>Hali ya Afya</th>
+            <th>Maelezo</th>
+            <th>Tarehe</th>
+            <th>Vitendo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in data %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ record.chicken.tag_number }}</td>
+            <td>
+                <span class="badge badge-{% if record.status == 'good' %}success{% else %}danger{% endif %}">
+                    {{ record.get_status_display }}
+                </span>
+            </td>
+            <td>{{ record.notes|truncatechars:50 }}</td>
+            <td>{{ record.date_recorded|date:"d/m/Y" }}</td>
+            <td>
+                <div class="btn-group btn-group-sm">
+                    <a href="{% url 'health:edit_health' record.id %}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'health:delete_health' record.id %}" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" class="text-center">Hakuna rekodi zilizopatikana</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

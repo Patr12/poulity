@@ -1,0 +1,94 @@
+{% extends "reports/base_report.html" %}
+
+{% block report_title %}Egg Production Report{% endblock %}
+
+{% block report_content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="chart-container">
+            <canvas id="productionChart"></canvas>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="chart-container">
+            <canvas id="qualityChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h4>Detailed Data</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Total Eggs</th>
+                    <th>Avg Weight (g)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in eggs_data %}
+                <tr>
+                    <td>{{ item.date_laid__month }}/{{ item.date_laid__year }}</td>
+                    <td>{{ item.total_eggs }}</td>
+                    <td>{{ item.avg_weight|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+$(document).ready(function() {
+    // Production chart
+    const ctx1 = document.getElementById('productionChart').getContext('2d');
+    const productionChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: {{ eggs_data|map_attr:"date_laid__month"|safe }},
+            datasets: [{
+                label: 'Eggs Produced',
+                data: {{ eggs_data|map_attr:"total_eggs"|safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Quality chart
+    const ctx2 = document.getElementById('qualityChart').getContext('2d');
+    const qualityChart = new Chart(ctx2, {
+        type: 'pie',
+        data: {
+            labels: {{ quality_data|map_attr:"quality"|safe }},
+            datasets: [{
+                data: {{ quality_data|map_attr:"count"|safe }},
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(54, 162, 235, 0.5)'
+                ],
+                borderWidth: 1
+            }]
+        }
+    });
+});
+</script>
+{% endblock %}

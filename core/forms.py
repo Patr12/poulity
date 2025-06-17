@@ -13,10 +13,16 @@ class EggProductionForm(forms.ModelForm):
 class ChickenHealthStatusForm(forms.ModelForm):
     class Meta:
         model = HealthStatus
-        fields = ['status', 'count']
+        fields = ['chicken', 'status', 'checkup_date', 'notes']
         widgets = {
-            'status': forms.Select(attrs={'class': 'form-control'}),
-            'count': forms.NumberInput(attrs={'class': 'form-control'}),
+            'checkup_date': forms.DateInput(attrs={'type': 'date'}),
+            'notes': forms.Textarea(attrs={'rows': 3}),
+        }
+        labels = {
+            'chicken': 'Kuku',
+            'status': 'Hali ya Afya',
+            'checkup_date': 'Tarehe ya Uchunguzi',
+            'notes': 'Maelezo',
         }
 
 class DiseaseForm(forms.ModelForm):
@@ -69,8 +75,18 @@ class HealthReportForm(forms.ModelForm):
         model = HealthReport
         fields = ['health_checkup', 'vet_report']
         widgets = {
-            'health_checkup': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
-            'vet_report': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'health_checkup': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Weka maelezo ya uchunguzi wa afya...'
+            }),
+            'vet_report': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Weka ripoti ya daktari wa wanyama...'
+            }),
+        }
+        labels = {
+            'health_checkup': 'Uchunguzi wa Afya',
+            'vet_report': 'Ripoti ya Daktari',
         }
 
 

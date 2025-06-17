@@ -2,6 +2,7 @@ from django.db import models
 # Create your models here.# health/models.py
 from django.db import models, transaction
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Disease(models.Model):
     SEVERITY_CHOICES = [
@@ -86,7 +87,8 @@ class HealthStatus(models.Model):
     chicken = models.ForeignKey('core.Chicken', on_delete=models.CASCADE, related_name='health_checks')
     status = models.CharField(max_length=200, choices=HEALTH_CHOICES)
     count = models.PositiveIntegerField(null=True, blank=True)
-    checkup_date = models.DateField()
+    checkup_date = models.DateField(default=timezone.now)  # Add default value
+    notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.chicken.tag_number} status: {self.status} on {self.checkup_date}"

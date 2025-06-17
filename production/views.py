@@ -1,8 +1,9 @@
 from django.shortcuts import render
-# Create your views here.
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
+from django.contrib import messages
+from customers.models import Customer
 from .models import EggProduction, Incubation, Product
 from .forms import EggProductionForm, IncubationForm # assuming you have these forms created
 
@@ -27,7 +28,7 @@ def eggproduction_create(request):
             egg.collected_by = request.user
             egg.save()
             form.save_m2m()
-            return redirect('eggproduction_list')
+            return redirect('production:eggproduction_list')
     else:
         form = EggProductionForm()
     return render(request, 'eggproduction/form.html', {'form': form})
@@ -41,7 +42,7 @@ def eggproduction_update(request, pk):
         form = EggProductionForm(request.POST, instance=egg)
         if form.is_valid():
             form.save()
-            return redirect('eggproduction_detail', pk=egg.pk)
+            return redirect('production:eggproduction_detail', pk=egg.pk)
     else:
         form = EggProductionForm(instance=egg)
     return render(request, 'eggproduction/form.html', {'form': form})
@@ -53,15 +54,26 @@ def eggproduction_delete(request, pk):
         return HttpResponseForbidden()
     if request.method == 'POST':
         egg.delete()
-        return redirect('eggproduction_list')
+        return redirect('production:eggproduction_list')
     return render(request, 'eggproduction/confirm_delete.html', {'object': egg})
 
 
 # Incubation Views
 @login_required
 def incubation_list(request):
-    incubations = Incubation.objects.filter(chicken__owner=request.user).order_by('-start_date')
-    return render(request, 'incubation/list.html', {'incubations': incubations})
+    # Get or create customer profile
+    customer, created = Customer.objects.get_or_create(user=request.user)
+    if created:
+        messages.info(request, "Created a customer profile for your account")
+    
+    incubations = Incubation.objects.filter(
+        chicken__owner=customer
+    ).select_related('chicken').order_by('-start_date')
+    
+    return render(request, 'incubation/list.html', {
+        'incubations': incubations,
+        'customer': customer
+    })
 
 @login_required
 def incubation_detail(request, pk):
@@ -79,7 +91,7 @@ def incubation_create(request):
             # optionally, set user or other defaults here
             incubation.save()
             form.save_m2m()
-            return redirect('incubation_list')
+            return redirect('production:incubation_list')
     else:
         form = IncubationForm()
     return render(request, 'incubation/form.html', {'form': form})
@@ -93,7 +105,7 @@ def incubation_update(request, pk):
         form = IncubationForm(request.POST, instance=incubation)
         if form.is_valid():
             form.save()
-            return redirect('incubation_detail', pk=incubation.pk)
+            return redirect('production:incubation_detail', pk=incubation.pk)
     else:
         form = IncubationForm(instance=incubation)
     return render(request, 'incubation/form.html', {'form': form})
@@ -105,7 +117,7 @@ def incubation_delete(request, pk):
         return HttpResponseForbidden()
     if request.method == 'POST':
         incubation.delete()
-        return redirect('incubation_list')
+        return redirect('production:incubation_list')
     return render(request, 'incubation/confirm_delete.html', {'object': incubation})
 
 

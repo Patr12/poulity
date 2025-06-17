@@ -3,34 +3,197 @@
 {% block title %}Taarifa za Ulishaji{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">Taarifa za Ulishaji wa Kuku</h2>
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="page-header d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">
+                    <i class="fas fa-utensils me-2"></i>Taarifa za Ulishaji wa Kuku
+                </h2>
+                <a href="{% url 'health:add_feeding' %}" class="btn btn-success">
+                    <i class="fas fa-plus me-1"></i> Ongeza Ulishaji
+                </a>
+            </div>
+            <hr class="mt-2">
+        </div>
+    </div>
 
-    {% if feedings %}
-        <table class="table table-bordered table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    <th>Tag ya Kuku</th>
-                    <th>Aina ya Chakula</th>
-                    <th>Kiasi (kg/l)</th>
-                    <th>Muda wa Kutoa Chakula</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for feeding in feedings %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ feeding.chicken.tag_number }}</td>
-                    <td>{{ feeding.feed_type }}</td>
-                    <td>{{ feeding.quantity }}</td>
-                    <td>{{ feeding.feeding_time|date:"Y-m-d H:i" }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <div class="alert alert-info">Hakuna taarifa za ulishaji zilizopatikana.</div>
-    {% endif %}
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2">Jumla ya Ulishaji</h6>
+                    <h3 class="card-title">{{ feedings.count }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2">Kiasi cha Chakula</h6>
+                    <h3 class="card-title">{{ total_quantity|default:"0" }} kg/l</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2">Aina za Chakula</h6>
+                    <h3 class="card-title">{{ feed_types|length }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2">Kuku Waliopewa</h6>
+                    <h3 class="card-title">{{ chickens_count }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Orodha ya Ulishaji</h5>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" 
+                                    id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-filter"></i> Chuja
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="filterDropdown">
+                                <li><a class="dropdown-item" href="?sort=recent">Muda (Karibuni)</a></li>
+                                <li><a class="dropdown-item" href="?sort=oldest">Muda (Zamani)</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                {% for type in feed_types %}
+                                <li><a class="dropdown-item" href="?type={{ type }}">{{ type }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body p-0">
+                    {% if feedings %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tag ya Kuku</th>
+                                        <th>Aina ya Chakula</th>
+                                        <th>Kiasi (kg/l)</th>
+                                        <th>Muda</th>
+                                        <th>Vitendo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for feeding in feedings %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>
+                                            <a href="{% url 'health:chicken_detail' feeding.chicken.id %}" 
+                                               class="text-decoration-none">
+                                                {{ feeding.chicken.tag_number }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info text-dark">
+                                                {{ feeding.feed_type }}
+                                            </span>
+                                        </td>
+                                        <td>{{ feeding.quantity }}</td>
+                                        <td>
+                                            <small class="text-muted">
+                                                {{ feeding.feeding_time|date:"Y-m-d H:i" }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="{% url 'health:edit_feeding' feeding.id %}" 
+                                                   class="btn btn-outline-primary" title="Hariri">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="{% url 'health:delete_feeding' feeding.id %}" 
+                                                   class="btn btn-outline-danger" title="Futa">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-utensils fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Hakuna taarifa za ulishaji zilizopatikana</h5>
+                            <p class="text-muted">Bonyeza kitufe cha "Ongeza Ulishaji" kuongeza rekodi mpya</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if feedings.has_other_pages %}
+                <div class="card-footer">
+                    <nav aria-label="Pagination">
+                        <ul class="pagination justify-content-center mb-0">
+                            {% if feedings.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ feedings.previous_page_number }}">Nyuma</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">Nyuma</span>
+                            </li>
+                            {% endif %}
+                            
+                            {% for i in feedings.paginator.page_range %}
+                            {% if feedings.number == i %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ i }}</span>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                            
+                            {% if feedings.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ feedings.next_page_number }}">Mbele</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">Mbele</span>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+    .badge {
+        font-weight: 500;
+        padding: 0.35em 0.65em;
+    }
+    .page-header {
+        padding: 0.5rem 0;
+    }
+    .card-header {
+        padding: 0.75rem 1.25rem;
+    }
+</style>
 {% endblock %}

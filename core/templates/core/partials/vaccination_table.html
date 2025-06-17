@@ -1,0 +1,41 @@
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th>#</th>
+                <th>Kuku</th>
+                <th>Chanjo</th>
+                <th>Tarehe</th>
+                <th>Tarehe ya Kufuatilia</th>
+                <th>Vitendo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vaccine in data %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ vaccine.chicken.tag_number }}</td>
+                <td>{{ vaccine.vaccine_name }}</td>
+                <td>{{ vaccine.date_administered|date:"d/m/Y" }}</td>
+                <td>{{ vaccine.next_due_date|date:"d/m/Y" }}</td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <a href="{% url 'core:edit_vaccination' vaccine.id %}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'core:delete_vaccination' vaccine.id %}" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-muted">
+                    <i class="fas fa-info-circle"></i> Hakuna rekodi za chanjo zilizopatikana
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

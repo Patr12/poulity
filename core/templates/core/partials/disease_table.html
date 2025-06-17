@@ -1,0 +1,41 @@
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th>#</th>
+                <th>Kuku</th>
+                <th>Ugoniwa</th>
+                <th>Dalili</th>
+                <th>Tarehe</th>
+                <th>Vitendo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for disease in data %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ disease.chicken.tag_number }}</td>
+                <td>{{ disease.disease_name }}</td>
+                <td>{{ disease.symptoms|truncatechars:30 }}</td>
+                <td>{{ disease.date_diagnosed|date:"d/m/Y" }}</td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <a href="{% url 'core:edit_disease' disease.id %}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'core:delete_disease' disease.id %}" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-muted">
+                    <i class="fas fa-info-circle"></i> Hakuna rekodi za magonjwa zilizopatikana
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

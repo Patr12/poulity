@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>My Incubation Records</h2>
+    
+    {% if not incubations %}
+        <div class="alert alert-info">
+            No incubation records found. 
+            <a href="{% url 'production:incubation_create' %}" class="alert-link">
+                Start your first incubation record
+            </a>
+        </div>
+    {% else %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Chicken</th>
+                    <th>Start Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for incubation in incubations %}
+                <tr>
+                    <td>{{ incubation.chicken.name }}</td>
+                    <td>{{ incubation.start_date|date:"Y-m-d" }}</td>
+                    <td>{{ incubation.get_status_display }}</td>
+                    <td>
+                        <a href="{% url 'production:incubation_detail' incubation.pk %}" class="btn btn-sm btn-info">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}

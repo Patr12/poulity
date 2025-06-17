@@ -1,0 +1,54 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2>{% block report_title %}{% endblock %}</h2>
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form id="date-filter" class="form-inline">
+                                <div class="form-group mr-2">
+                                    <label for="start-date" class="mr-2">From:</label>
+                                    <input type="date" id="start-date" name="start_date" 
+                                           class="form-control" value="{{ start_date }}">
+                                </div>
+                                <div class="form-group mr-2">
+                                    <label for="end-date" class="mr-2">To:</label>
+                                    <input type="date" id="end-date" name="end_date" 
+                                           class="form-control" value="{{ end_date }}">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                            </form>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <span class="text-muted">{{ time_range }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% block report_content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Handle date filter form submission
+    $('#date-filter').on('submit', function(e) {
+        e.preventDefault();
+        const startDate = $('#start-date').val();
+        const endDate = $('#end-date').val();
+        
+        // Reload page with new date parameters
+        window.location.search = `?start_date=${startDate}&end_date=${endDate}`;
+    });
+});
+</script>
+{% endblock %}

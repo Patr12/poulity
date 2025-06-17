@@ -1,14 +1,325 @@
 {% extends 'core/base.html' %}
+
+{% block title %}Ukuaji wa Vifaranga{% endblock %}
+
 {% block content %}
-<h2>Chick Growth</h2>
-<table>
-  <tr><th>Incubation ID</th><th>Chicks</th><th>Hatch Date</th></tr>
-  {% for chick in chicks %}
-  <tr>
-    <td>{{ chick.incubation.id }}</td>
-    <td>{{ chick.number_of_chicks }}</td>
-    <td>{{ chick.hatch_date }}</td>
-  </tr>
-  {% endfor %}
-</table>
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-chart-line text-primary me-2"></i>Ukuaji wa Vifaranga
+            </h1>
+            <p class="mb-0">Ufuatiliaji wa ukuaji na maendeleo ya vifaranga</p>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-outline-primary dropdown-toggle" type="button" 
+                    id="ageFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-filter me-1"></i>
+                {% if age_filter == 'all' %}Vifaranga Vyote
+                {% elif age_filter == 'week' %}Wiki 1
+                {% elif age_filter == 'month' %}Mwezi 1
+                {% else %}Zaidi ya Mwezi
+                {% endif %}
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="ageFilterDropdown">
+                <li><a class="dropdown-item {% if age_filter == 'all' %}active{% endif %}" 
+                       href="?age_filter=all">Vifaranga Vyote</a></li>
+                <li><a class="dropdown-item {% if age_filter == 'week' %}active{% endif %}" 
+                       href="?age_filter=week">Wiki 1</a></li>
+                <li><a class="dropdown-item {% if age_filter == 'month' %}active{% endif %}" 
+                       href="?age_filter=month">Mwezi 1</a></li>
+                <li><a class="dropdown-item {% if age_filter == 'older' %}active{% endif %}" 
+                       href="?age_filter=older">Zaidi ya Mwezi</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Growth Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-start-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Jumla ya Vifaranga</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ chicks.count }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-kiwi-bird fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-start-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Vifaranga vya Wiki 1</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ chicks|length }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-baby fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-start-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Wastani wa Umri</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {% if chicks %}
+                                    {{ chicks.0.age_days }} siku
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-start-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Idadi ya Vifaranga</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {% if chicks %}
+                                    {{ chicks.0.number_of_chicks }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-hashtag fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Growth Data Table -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-table me-1"></i> Orodha ya Vifaranga
+            </h6>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" 
+                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" 
+                     aria-labelledby="dropdownMenuLink">
+                    <div class="dropdown-header">Chagua Kitendo:</div>
+                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addChickModal">
+                        <i class="fas fa-plus me-1"></i> Ongeza Kifaranga
+                    </a>
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-download me-1"></i> Pakua Data
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-sync-alt me-1"></i> Sasisha
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="chickGrowthTable" width="100%" cellspacing="0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Kifaranga</th>
+                            <th>Umri (siku)</th>
+                            <th>Tarehe ya Kutoka</th>
+                            <th>Chanzo</th>
+                            <th>Idadi</th>
+                            <th>Vitendo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for chick in chicks %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <a href="{% url 'core:chicken_detail' chick.chicken.id %}">
+                                    {{ chick.chicken.tag_number }}
+                                </a>
+                            </td>
+                            <td>{{ chick.age_days }}</td>
+                            <td>{{ chick.hatch_date|date:"d/m/Y" }}</td>
+                            <td>
+                                {% if chick.source_incubation %}
+                                    <span class="badge bg-info text-white">Incubation</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Nje</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ chick.number_of_chicks }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="#" class="btn btn-info" title="Angalia">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-primary" title="Hariri">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">
+                                <i class="fas fa-info-circle"></i> Hakuna vifaranga vilivyopatikana
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Chick Modal -->
+<div class="modal fade" id="addChickModal" tabindex="-1" role="dialog" aria-labelledby="addChickModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="addChickModalLabel">
+                    <i class="fas fa-plus-circle me-2"></i>Ongeza Vifaranga Vipya
+                </h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addChickForm">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="chickenSelect" class="form-label">Kifaranga</label>
+                            <select class="form-select" id="chickenSelect" required>
+                                <option value="" selected disabled>Chagua kifaranga...</option>
+                                <!-- Options would be populated dynamically -->
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="hatchDate" class="form-label">Tarehe ya Kutoka</label>
+                            <input type="date" class="form-control" id="hatchDate" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="sourceIncubation" class="form-label">Chanzo</label>
+                            <select class="form-select" id="sourceIncubation">
+                                <option value="" selected>Chagua incubation...</option>
+                                <!-- Options would be populated dynamically -->
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="numberOfChicks" class="form-label">Idadi ya Vifaranga</label>
+                            <input type="number" class="form-control" id="numberOfChicks" min="1" value="1" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="chickNotes" class="form-label">Maelezo</label>
+                        <textarea class="form-control" id="chickNotes" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Ghairi
+                </button>
+                <button type="button" class="btn btn-primary" id="saveChickBtn">
+                    <i class="fas fa-save me-1"></i> Hifadhi
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 0.5rem;
+        transition: all 0.3s ease;
+    }
+    .card:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+    .badge {
+        font-weight: 500;
+        padding: 0.35em 0.65em;
+    }
+    .border-start-primary {
+        border-left: 0.25rem solid #4e73df !important;
+    }
+    .border-start-success {
+        border-left: 0.25rem solid #1cc88a !important;
+    }
+    .border-start-info {
+        border-left: 0.25rem solid #36b9cc !important;
+    }
+    .border-start-warning {
+        border-left: 0.25rem solid #f6c23e !important;
+    }
+</style>
+
+<script>
+// Initialize DataTable
+document.addEventListener('DOMContentLoaded', function() {
+    // Simple client-side table sorting/filtering
+    const table = document.getElementById('chickGrowthTable');
+    if (table) {
+        new simpleDatatables.DataTable(table, {
+            searchable: true,
+            fixedHeight: true,
+            labels: {
+                placeholder: "Tafuta...",
+                perPage: "{select} rekodi kwa ukurasa",
+                noRows: "Hakuna rekodi zilizopatikana",
+                info: "Inaonyesha {start} hadi {end} ya {rows} rekodi",
+            }
+        });
+    }
+    
+    // Form submission handling for the modal
+    const saveBtn = document.getElementById('saveChickBtn');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', function() {
+            // Add form submission logic here
+            alert('Form would be submitted here in a real implementation');
+            $('#addChickModal').modal('hide');
+        });
+    }
+});
+</script>
 {% endblock %}

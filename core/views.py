@@ -388,8 +388,34 @@ def incubation_view(request):
 
 # Chick growth view
 def chick_growth_view(request):
-    chicks = Chick.objects.all()
-    return render(request, 'core/chick_growth.html', {'chicks': chicks})
+    # Calculate age ranges for filtering
+    today = timezone.now().date()
+    week_ago = today - timedelta(days=7)
+    month_ago = today - timedelta(days=30)
+    
+    # Get filter parameter from request
+    age_filter = request.GET.get('age_filter', 'all')
+    
+    # Filter chicks based on age
+    if age_filter == 'week':
+        chicks = Chick.objects.filter(hatch_date__gte=week_ago)
+    elif age_filter == 'month':
+        chicks = Chick.objects.filter(hatch_date__gte=month_ago)
+    elif age_filter == 'older':
+        chicks = Chick.objects.filter(hatch_date__lt=month_ago)
+    else:
+        chicks = Chick.objects.all()
+    
+    # Add age in days to each chick
+    for chick in chicks:
+        chick.age_days = (today - chick.hatch_date).days
+    
+    context = {
+        'chicks': chicks,
+        'age_filter': age_filter,
+        'today': today,
+    }
+    return render(request, 'core/chick_growth.html', context)
 
 # Customer view
 def customer_view(request):
